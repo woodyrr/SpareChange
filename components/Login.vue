@@ -1,16 +1,41 @@
-<!-- <script setup>
-import { Button } from './ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
+<script setup>
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
+import { Button } from './ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { account } from '@/lib/appwrite';
+
+const router = useRouter();
+const loggedInUser = ref(null);
+const email = ref('');
+const password = ref('');
+
+const login = async () => {
+  try {
+    await account.createEmailPasswordSession(email.value, password.value);
+    loggedInUser.value = await account.get();
+    router.push("/home");
+  } catch (e) {
+    console.log(e);
+    alert('Invalid email or password');
+  }
+};
+
+// const logout = async () => {
+//   await account.deleteSession('current');
+//   loggedInUser.value = null;
+// };
 </script>
 
 <template>
-  <Card class="m-auto max-w-sm bg-muted">
+  <p>
+    {{ loggedInUser ? `Logged in as ${loggedInUser.name}` : 'Not logged in' }}
+  </p>
+  <Card class="m-auto max-w-lg bg-muted">
     <CardHeader>
-      <CardTitle class="text-2xl">
-        Login
-      </CardTitle>
+      <CardTitle class="text-2xl">Login</CardTitle>
       <CardDescription>
         Enter your email below to login to your account
       </CardDescription>
@@ -23,6 +48,7 @@ import { Label } from '@/components/ui/label'
             id="email"
             type="email"
             placeholder="m@example.com"
+            v-model="email"
             required
           />
         </div>
@@ -33,13 +59,10 @@ import { Label } from '@/components/ui/label'
               Forgot your password?
             </a>
           </div>
-          <Input id="password" type="password" required />
+          <Input id="password" type="password" placeholder="Enter your password" v-model="password" required />
         </div>
-        <Button type="submit" class="w-full">
+        <Button type="submit" class="w-full" @click="login">
           Login
-        </Button>
-        <Button variant="outline" class="w-full">
-          Login with Google
         </Button>
       </div>
       <div class="mt-4 text-center text-sm">
@@ -50,56 +73,32 @@ import { Label } from '@/components/ui/label'
       </div>
     </CardContent>
   </Card>
+</template>
 
-  
+<!-- 
+<script setup>
+
+</script> -->
+
+<!-- <template>
+  <div class="">
+    <p>
+      {{ loggedInUser ? `Logged in as ${loggedInUser.name}` : 'Not logged in' }}
+    </p>
+
+    <form>
+      <input type="email" placeholder="Email" v-model="email" />
+      <input type="password" placeholder="Password" v-model="password" />
+      <input type="text" placeholder="Name" v-model="name" />
+      <button type="button" @click="login(email, password)">Login</button>
+      <button type="button" @click="register">
+        Register
+      </button>
+      <button type="button" @click="logout">
+        Logout
+      </button>
+    </form>
+  </div>
 </template> -->
 
-<script setup>
-import { useForm } from 'vee-validate'
-import { toTypedSchema } from '@vee-validate/zod'
-import * as z from 'zod'
-
-import { Button } from '@/components/ui/button'
-import {
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from './ui/form'
-// import { Input } from './ui/input'
-
-const formSchema = toTypedSchema(z.object({
-  username: z.string().min(2).max(50),
-}))
-
-const form = useForm({
-  validationSchema: formSchema,
-})
-
-const onSubmit = form.handleSubmit((values) => {
-  console.log('Form submitted!', values)
-})
-</script>
-
-<template>
-  <form @submit="onSubmit">
-    <FormField v-slot="{ componentField }" name="username">
-      <FormItem>
-        <FormLabel>Username</FormLabel>
-        <FormControl>
-          <Input type="text" placeholder="shadcn" v-bind="componentField" />
-        </FormControl>
-        <FormDescription>
-          This is your public display name.
-        </FormDescription>
-        <FormMessage />
-      </FormItem>
-    </FormField>
-    <Button type="submit">
-      Submit
-    </Button>
-  </form>
-</template>
 

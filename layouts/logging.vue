@@ -7,7 +7,7 @@ import { Label } from '@/components/ui/label'
 
 <template>
   <div class=" min-h-screen flex items-center justify-center bg-foreground">
-    <login />
+      <login />
   </div>
   
 </template>
