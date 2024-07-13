@@ -9,15 +9,15 @@
   import PresetShare from '@/components/PresetShare.vue'
   import { Input } from '@/components/ui/input'
   import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
-  import { account } from '@/lib/appwrite';
-
+  import { account } from '~/appwrite';
+  const user = useUserSession();
 const router = useRouter();
 const loggedInUser = ref(null);
 
   const logout = async () => {
   await account.deleteSession('current');
   loggedInUser.value = null;
-  router.push("/signin");
+  // router.push("/signin");
 };
   // import History from '~/pages/history.vue'
 </script>
@@ -195,7 +195,7 @@ const loggedInUser = ref(null);
             <DropdownMenuItem>Settings</DropdownMenuItem>
             <DropdownMenuItem>Support</DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem @click="logout">Logout</DropdownMenuItem>
+            <DropdownMenuItem @click="user.logout()">Logout</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </header>

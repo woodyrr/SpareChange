@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { account, ID } from '@/lib/appwrite';
+import { account, ID } from '~/appwrite';
 
 const router = useRouter();
 const email = ref('');
@@ -20,37 +20,73 @@ const postalcode = ref('');
 const dateofbirth = ref('');
 const ssn = ref('');
 
+// const register = async () => {
+//   if (password.value.length >= 8) {
+//     if (password.value === confirmPassword.value) {
+//       try {
+//         await account.create(
+//           ID.unique(),
+//           email.value,
+//           password.value,
+//           firstname.value,
+//           lastname.value,
+//           address.value,
+//           city.value,
+//           dateofbirth.value,
+//           state.value,
+//           postalcode.value,
+//           ssn.value
+//         );
+//         // const result = await account.get();
+//         console.log(result);
+//         router.push("/home");
+//       } catch (e) {
+//         console.log(e);
+//         alert('Failed to create account. Please ensure all fields are valid and try again.');
+//       }
+//     } else {
+//       alert("Passwords do not match");
+//     }
+//   } else {
+//     alert("Password length should be at least 8 characters");
+//   }
+// };
+const login = async (email, password) => {
+  await account.createEmailPasswordSession(email, password);
+  // loggedInUser.value = await account.get();
+};
+// jeanlouis1234
 const register = async () => {
   if (password.value.length >= 8) {
     if (password.value === confirmPassword.value) {
       try {
-        await account.create(
-          ID.unique(),
-          email.value,
-          password.value,
-          firstname.value,
-          lastname.value,
-          address.value,
-          city.value,
-          dateofbirth.value,
-          state.value,
-          postalcode.value,
-          ssn.value
-        );
-        const result = await account.get();
-        console.log(result);
+        await account.create(ID.unique(),
+                email.value,
+                password.value,
+                firstname.value,
+                lastname.value,
+                address.value,
+                city.value,
+                dateofbirth.value,
+                state.value,
+                postalcode.value,
+                ssn.value);
+        login(email.value, password.value);
         router.push("/home");
-      } catch (e) {
+      }catch (e) {
         console.log(e);
         alert('Failed to create account. Please ensure all fields are valid and try again.');
       }
-    } else {
+  } else {
       alert("Passwords do not match");
     }
-  } else {
+  }
+    else {
     alert("Password length should be at least 8 characters");
   }
+  
 };
+
 </script>
 
 <template>
