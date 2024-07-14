@@ -1,13 +1,20 @@
 import { ID } from "appwrite";
 import { ref } from "vue";
-import { account } from "../appwrite";
+import { account} from "../appwrite";
+import { users} from "../appwriteUsers";
 
 const current = ref(null); // Reference to current user object
 
 export const useUserSession = () => {
-    const register = async (email, password) => {
-        await account.create(ID.unique(), email.value, password.value, firstname.value, lastname.value, address.value, city.value, dateofbirth.value, state.value, postalcode.value, ssn.value); // Register new user in Appwrite
-        // await login(email, password); // Login registered user
+    const register = async (email, password, firstname, lastname, address, city, dateofbirth, state, postalcode, ssn) => {
+        await account.create(ID.unique(), email, password, firstname, lastname, address, city, dateofbirth, state, postalcode, ssn); // Register new user in Appwrite
+        await login(email, password); // Login registered user
+        // current.value = authUser;
+        await users.create(
+            ID.unique(), email, password, firstname, lastname, address, city, dateofbirth, state, postalcode, ssn// name (optional)
+        );
+        const result = await users.get();
+        console.log(result)
     };
 
     const login = async (email, password) => {
@@ -25,13 +32,23 @@ export const useUserSession = () => {
     // Check if already logged in to initialize the store.
     account.getSession('current').then((user) => {
         current.value = user;
+        
     });
+
+
+    
+
 
     return {
         current,
         login,
         logout,
-        register,
+        register
+        
     };
 };
+
+
+
+// new stuff
 

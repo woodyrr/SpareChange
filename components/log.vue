@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { account} from '~/appwrite';
 const user = useUserSession();
+const userinfo = userInfos();
 // Router instance
 const router = useRouter();
 
@@ -27,33 +28,20 @@ const isSignUp = ref(false);
 
 // Login user
 const handleLogin = async (event) => {
-  // const form = event.target;
-  // const formData = new FormData(form);
-
   await user.login(email.value, password.value);
 
-  // form.reset(); // Clear the form
 };
 
 // Register user
 const handleRegistration = async (event) => {
-  // event.preventDefault();
-  if (password.value.length >= 8) {
-    if (password.value === confirmPassword.value) {
-      try {
-        await account.register( email.value, password.value, firstname.value, lastname.value, address.value, city.value, dateofbirth.value, state.value, postalcode.value, ssn.value);
-        // await handleLogin(event);
-        // router.push("/home");
-      } catch (e) {
-        console.log(e);
-        alert('Failed to create account. Please ensure all fields are valid and try again.');
-      }
-    } else {
-      alert("Passwords do not match");
-    }
-  } else {
-    alert("Password length should be at least 8 characters");
-  }
+        await user.register( email.value, password.value, firstname.value, lastname.value, address.value, city.value, dateofbirth.value, state.value, postalcode.value, ssn.value);
+
+  // }
+};
+
+const using = async (event) => {
+  await userinfo.using( email.value, password.value, firstname.value, lastname.value, address.value, city.value, dateofbirth.value, state.value, postalcode.value, ssn.value);
+  
 };
 let log = ref(true)
 let sign = ref(false)
@@ -64,7 +52,7 @@ let sign = ref(false)
   
   <Card class="m-auto max-w-lg bg-muted" v-if="log" >
     <CardHeader>
-      <p class="text-black">s{{ user.current }}</p>
+      <!-- <p class="text-black">s{{ userInfos.value }}</p> -->
       <CardTitle class="text-2xl">Login</CardTitle>
       <CardDescription>
         Enter your email below to login to your account
@@ -173,7 +161,7 @@ let sign = ref(false)
           <Label for="confirm-password">Confirm Password</Label>
           <Input id="confirm-password" type="password" placeholder="Confirm your password" v-model="confirmPassword" required />
         </div>
-        <Button type="submit" class="w-full" @click="handleRegistration">
+        <Button type="submit" class="w-full" @click="handleRegistration(), using()">
           Create an account
         </Button>
       </div>

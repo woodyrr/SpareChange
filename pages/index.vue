@@ -1,6 +1,6 @@
 <template>
-    <div class="">
-        Hello index
+    <div class="text-black">
+        <Dance />
     </div>
 </template>
 

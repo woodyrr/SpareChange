@@ -2,7 +2,7 @@
   import SideBar from '~/components/SideBar.vue';
   import {ref} from 'vue'
   const user = useUserSession();
-  
+
   // Authentication process stuff
 // const isLoggedIn = ref(false)
 // const router = useRouter()
@@ -36,11 +36,11 @@ let userIcons = []
 </script>
 
 <template>
-  
-  <div v-if="user.current > 1" class="">
-    <NuxtPage />
+  <div v-if="user.current.value" class="">
+    <!-- <NuxtPage /> -->
       <SideBar>
         <slot />
+        <!-- <NuxtPage /> -->
       </SideBar>
   </div>
   <section v-else class=" min-h-screen flex items-center justify-center bg-foreground">
